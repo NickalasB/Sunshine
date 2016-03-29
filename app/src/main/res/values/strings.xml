@@ -18,4 +18,35 @@
     <!--Default Postal code for location preferences [CHAR LIMIT=NONE]-->
     <string name="pref_location_default" translatable="false">97224</string>
 
+    <!--Label for unit preferences [CHAR LIMIT=30] -->
+    <string name="pref_units_label">Temperature units</string>
+
+    <!--Key name for storing units in SharedPreferences [CHAR LIMIT=NONE]-->
+    <string name="pref_units_key" translatable="false">units</string>
+
+    <!--string array for metric and imperial-->
+    <string-array name="pref_units_options">
+        <item>Metric</item>
+        <item>Imperial</item>
+    </string-array>
+
+    <!--string array for metric and imperial-->
+    <string-array name="pref_units_values">
+        <item>Metric</item>
+        <item>Imperial</item>
+    </string-array>
+
+    <!--Default temperature unit for units preferences [CHAR LIMIT=NONE]-->
+    <string name="pref_units_default" translatable="false">Metric</string>
+
+    <string name="pref_units_metric" translatable="false">Metric</string>
+    <string name="pref_units_imperial" translatable="false">Imperial</string>
+
+
+
+
+
+
+
+
 </resources>

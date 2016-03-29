@@ -75,10 +75,20 @@ public class ForecastFragment extends Fragment {
     private void updateWeather(){
         FetchWeatherTask weatherTask = new FetchWeatherTask();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
+        //declares and retrieves the location key from shared preferences
+        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
         weatherTask.execute(location);
     }
+
+//    private void updateUnits(){
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        //declares and retrieves the units key from shared preferences
+//        String location = prefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_default));
+//
+//        ToggleButton imperialToggle = prefs.getBoolean("units", )
+//
+//
+//    }
 
     @Override
     public void onStart(){
@@ -156,6 +166,22 @@ public class ForecastFragment extends Fragment {
          * Prepare the weather high/lows for presentation.
          */
         private String formatHighLows(double high, double low) {
+            //Temp is fetched in Celsius by default
+            //If user prefers fahrenheit the we can convert it here
+            //we do this rather than fetching in Farenheit so that the user
+            //can change the option w/o us having to refetch the data once we start
+            //storing the values in a database
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String unitType = sharedPrefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_default));
+
+            if (unitType.equals(getString(R.string.pref_units_imperial))){
+                high = (high * 1.8) + 32;
+                low = (low *1.8) + 32;
+            } else if (!unitType.equals(getString(R.string.pref_units_imperial))){
+                Log.d (LOG_TAG, "unit type not found:" + unitType);
+
+            }
+
             // For presentation, assume the user doesn't care about tenths of a degree.
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
@@ -231,6 +257,7 @@ public class ForecastFragment extends Fragment {
                 double low = temperatureObject.getDouble(OWM_MIN);
 
                 highAndLow = formatHighLows(high, low);
+
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 

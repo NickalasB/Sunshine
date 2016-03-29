@@ -1,6 +1,8 @@
 package com.example.android.sunshine.app;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,8 +14,10 @@ import android.view.ViewGroup;
 /**
  * Created by nickbradshaw on 3/26/16.
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class DetailFragment extends Fragment {
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //ensures that a menu is happening in this activity
