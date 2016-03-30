@@ -78,17 +78,9 @@ public class ForecastFragment extends Fragment {
         //declares and retrieves the location key from shared preferences
         String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
         weatherTask.execute(location);
+
     }
 
-//    private void updateUnits(){
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        //declares and retrieves the units key from shared preferences
-//        String location = prefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_default));
-//
-//        ToggleButton imperialToggle = prefs.getBoolean("units", )
-//
-//
-//    }
 
     @Override
     public void onStart(){
@@ -176,8 +168,8 @@ public class ForecastFragment extends Fragment {
 
             if (unitType.equals(getString(R.string.pref_units_imperial))){
                 high = (high * 1.8) + 32;
-                low = (low *1.8) + 32;
-            } else if (!unitType.equals(getString(R.string.pref_units_imperial))){
+                low = (low * 1.8) + 32;
+            } else if (!unitType.equals(getString(R.string.pref_units_metric))){
                 Log.d (LOG_TAG, "unit type not found:" + unitType);
 
             }
@@ -262,7 +254,6 @@ public class ForecastFragment extends Fragment {
             }
 
             for (String s : resultStrs) {
-//                Log.v(LOG_TAG, "Forecast entry: " + s);
             }
             return resultStrs;
 
@@ -271,7 +262,7 @@ public class ForecastFragment extends Fragment {
         @Override
         protected String[] doInBackground(String... params){
 
-            //if there's no zipcode there's nothing to lookup. Verify size of Params
+            //if there's no code there's nothing to lookup. Verify size of Params
             if (params.length == 0) {
                 return null;
             }
@@ -288,14 +279,12 @@ public class ForecastFragment extends Fragment {
             String units = "metric";
             int numDays = 7;
 
-
             try {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                final String FORECAST_BASE_URL =
-                        "http://api.openweathermap.org/data/2.5/forecast/daily?";
-                final String QUERY_PARAM = "q";
+                final String FORECAST_BASE_URL ="http://api.openweathermap.org/data/2.5/forecast/daily?";
+                final String QUERY_PARAM = "zip";
                 final String FORMAT_PARAM = "mode";
                 final String UNITS_PARAM = "units";
                 final String DAYS_PARAM = "cnt";
@@ -310,13 +299,8 @@ public class ForecastFragment extends Fragment {
                         .build();
 
                 URL url = new URL(builtUri.toString());
-
 //                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
-
-//                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7";
-//                String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-////                URL url = new URL(baseUrl.concat(apiKey));
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
