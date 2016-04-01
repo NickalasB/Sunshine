@@ -8,5 +8,7 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
-
+    <item android:id="@+id/action_map"
+        android:title="View location on map"
+        app:showAsAction="never"/>
 </menu>

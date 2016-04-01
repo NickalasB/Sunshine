@@ -72,6 +72,7 @@ public class ForecastFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+
     private void updateWeather(){
         FetchWeatherTask weatherTask = new FetchWeatherTask();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -80,6 +81,7 @@ public class ForecastFragment extends Fragment {
         weatherTask.execute(location);
 
     }
+
 
 
     @Override
@@ -131,7 +133,6 @@ public class ForecastFragment extends Fragment {
                 // Executed in an Activity, so 'this' is the Context
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra(Intent.EXTRA_TEXT, forecast);
-
                 startActivity(intent);
 
             }
@@ -249,8 +250,11 @@ public class ForecastFragment extends Fragment {
                 double low = temperatureObject.getDouble(OWM_MIN);
 
                 highAndLow = formatHighLows(high, low);
-
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
+
+//                Intent wxResultIntent = new Intent(getActivity(), DetailActivity.class);
+//                wxResultIntent.putExtra("weatherResultString", resultStrs);
+//                startActivity(wxResultIntent);
             }
 
             for (String s : resultStrs) {
@@ -266,6 +270,7 @@ public class ForecastFragment extends Fragment {
             if (params.length == 0) {
                 return null;
             }
+
 
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
@@ -290,6 +295,7 @@ public class ForecastFragment extends Fragment {
                 final String DAYS_PARAM = "cnt";
                 final String APPID_PARAM = "APPID";
 
+
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, params[0])
                         .appendQueryParameter(FORMAT_PARAM, format)
@@ -299,7 +305,7 @@ public class ForecastFragment extends Fragment {
                         .build();
 
                 URL url = new URL(builtUri.toString());
-//                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
+                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
 
                 // Create the request to OpenWeatherMap, and open the connection
