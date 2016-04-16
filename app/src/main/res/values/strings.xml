@@ -21,8 +21,7 @@
     <!--Label for unit preferences [CHAR LIMIT=30] -->
     <string name="pref_units_label">Temperature units</string>
 
-    <!--Key name for storing units in SharedPreferences [CHAR LIMIT=NONE]-->
-    <string name="pref_units_key" translatable="false">units</string>
+
 
     <!--string array for metric and imperial-->
     <string-array name="pref_units_options">
@@ -38,6 +37,8 @@
 
     <!--Default temperature unit for units preferences [CHAR LIMIT=NONE]-->
     <string name="pref_units_default" translatable="false">Metric</string>
+    <!--Key name for storing units in SharedPreferences [CHAR LIMIT=NONE]-->
+    <string name="pref_units_key" translatable="false">units</string>
 
     <string name="pref_units_metric" translatable="false">Metric</string>
     <string name="pref_units_imperial" translatable="false">Imperial</string>

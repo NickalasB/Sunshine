@@ -73,12 +73,19 @@ public class ForecastFragment extends Fragment {
     }
 
 
+
     private void updateWeather(){
+
+        final String LOG_TAG = ForecastFragment.class.getSimpleName();
+
+
         FetchWeatherTask weatherTask = new FetchWeatherTask();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //declares and retrieves the location key from shared preferences
         String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
         weatherTask.execute(location);
+
+        Log.v(LOG_TAG, "SAVED LOCATION" + location);
 
     }
 
@@ -133,6 +140,7 @@ public class ForecastFragment extends Fragment {
                 // Executed in an Activity, so 'this' is the Context
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra(Intent.EXTRA_TEXT, forecast);
+
                 startActivity(intent);
 
             }
@@ -252,9 +260,6 @@ public class ForecastFragment extends Fragment {
                 highAndLow = formatHighLows(high, low);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
 
-//                Intent wxResultIntent = new Intent(getActivity(), DetailActivity.class);
-//                wxResultIntent.putExtra("weatherResultString", resultStrs);
-//                startActivity(wxResultIntent);
             }
 
             for (String s : resultStrs) {
