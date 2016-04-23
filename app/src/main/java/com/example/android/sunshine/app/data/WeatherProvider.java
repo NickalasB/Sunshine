@@ -344,6 +344,7 @@ public class WeatherProvider extends ContentProvider {
         }
     }
 
+
     // You do not need to call this method. This is a method specifically to assist the testing
     // framework in running smoothly. You can read more at:
     // http://developer.android.com/reference/android/content/ContentProvider.html#shutdown()
