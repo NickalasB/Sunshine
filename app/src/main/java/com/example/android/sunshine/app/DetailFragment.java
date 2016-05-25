@@ -97,8 +97,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mPressureview = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
 
         return rootView;
-
-
     }
 
     @Override
@@ -163,8 +161,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
 
             //read weather icon from cursor
-            int weatherId = data.getInt(ForecastFragment.COL_WEATHER_ID);
-            mIconView.setImageResource(R.drawable.ic_launcher);
+            int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
+            mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
             // Read description from cursor and update view
             String description = data.getString(COL_WEATHER_DESC);
