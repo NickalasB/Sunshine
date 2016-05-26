@@ -24,14 +24,14 @@
                 android:id="@+id/detail_item_friendly_date_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Today"/>
+                />
 
             <TextView
                 android:id="@+id/detail_item_date_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="24dp"
-                android:text="Tuesday, May 23rd"/>
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,15 +50,14 @@
                         android:id="@+id/detail_item_high_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:text="88 degrees"/>
+                        android:padding="8dp" />
 
                     <TextView
                         android:id="@+id/detail_item_low_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
-                        android:text="42 degrees"/>
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -79,7 +78,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="clear"/>
+                        />
                 </LinearLayout>
 
 
@@ -91,14 +90,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="real humid"/>
+                />
 
             <TextView
                 android:id="@+id/detail_wind_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="real windy"/>
+                />
 
 
             <TextView
@@ -106,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="super pressury"/>
+                />
 
         </LinearLayout>
 
