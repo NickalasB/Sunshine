@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         super.onCreate(savedInstanceState);
         mLocation = Utility.getPreferredLocation(this);
 
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_main);
         if (findViewById(R.id.weather_detail_container) != null) {
 
             //the detail container will only be visible on screens with a smallest width of 600dp
@@ -55,6 +55,11 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         } else {
             mTwoPane = false;
         }
+
+        ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_forecast));
+        forecastFragment.setUseTodayLayout(!mTwoPane);
+
     }
 
 

@@ -14,14 +14,36 @@ import android.widget.TextView;
  * from a {@link android.database.Cursor} to a {@link android.widget.ListView}.
  */
 public class ForecastAdapter extends CursorAdapter {
-    public ForecastAdapter(Context context, Cursor c, int flags) {
-        super(context, c, flags);
-    }
+    private boolean mUseTodayLayout = true;
 
     private static final int VIEW_TYPE_COUNT = 2;
     private static final int VIEW_TYPE_TODAY = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
 
+    /**
+     * Cache of the children views for a forecast list item.
+     */
+    public static class WeatherViewHolder {
+        public final ImageView iconView;
+        public final TextView dateView;
+        public final TextView forecastView;
+        public final TextView highView;
+        public final TextView lowView;
+
+        public WeatherViewHolder(View view) {
+            iconView = (ImageView) view.findViewById(R.id.list_item_icon);
+            dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
+            forecastView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
+            highView = (TextView) view.findViewById(R.id.list_item_high_textview);
+            lowView = (TextView) view.findViewById(R.id.list_item_low_textview);
+        }
+    }
+
+
+
+    public ForecastAdapter(Context context, Cursor c, int flags) {
+        super(context, c, flags);
+    }
 
     /*
     Remember that these views are reused as needed.
@@ -96,32 +118,18 @@ public class ForecastAdapter extends CursorAdapter {
         weatherViewHolder.lowView.setText(Utility.formatTemperature(context, low, isMetric));
     }
 
+    public void setUseTodayLayout(boolean useTodayLayout){
+        mUseTodayLayout = useTodayLayout;
+    }
+
     @Override
     public int getItemViewType (int position){
-        return (position == 0) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return (position == 0 && mUseTodayLayout) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
     }
 
     @Override
     public int getViewTypeCount(){
-        return 2;
-    }
-
-    public static class WeatherViewHolder {
-        public final ImageView iconView;
-        public final TextView dateView;
-        public final TextView forecastView;
-        public final TextView highView;
-        public final TextView lowView;
-
-        public WeatherViewHolder(View view) {
-            iconView = (ImageView) view.findViewById(R.id.list_item_icon);
-            dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
-            forecastView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
-            highView = (TextView) view.findViewById(R.id.list_item_high_textview);
-            lowView = (TextView) view.findViewById(R.id.list_item_low_textview);
-        }
-
-
+        return VIEW_TYPE_COUNT;
     }
 
 }

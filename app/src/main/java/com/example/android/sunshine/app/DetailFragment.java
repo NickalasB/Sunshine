@@ -10,7 +10,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,13 +72,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private ImageView mIconView;
     private TextView mForecastView;
-    private TextView mFriendlyDateview;
+    private TextView mFriendlyDateView;
     private TextView mDateView;
     private TextView mHighView;
     private TextView mLowView;
     private TextView mHumidityView;
     private TextView mWindView;
-    private TextView mPressureview;
+    private TextView mPressureView;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -97,13 +96,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mIconView = (ImageView) rootView.findViewById(R.id.detail_item_icon);
         mForecastView = (TextView) rootView.findViewById(R.id.detail_item_forecast_textview);
-        mFriendlyDateview = (TextView) rootView.findViewById(R.id.detail_item_friendly_date_textview);
+        mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_item_friendly_date_textview);
         mDateView = (TextView) rootView.findViewById(R.id.detail_item_date_textview);
         mHighView = (TextView) rootView.findViewById(R.id.detail_item_high_textview);
         mLowView = (TextView) rootView.findViewById(R.id.detail_item_low_textview);
         mHumidityView = (TextView) rootView.findViewById(R.id.detail_item_humidity_textview);
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
-        mPressureview = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
+        mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
 
         return rootView;
     }
@@ -170,71 +169,62 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
 
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.v(LOG_TAG, "In onLoadFinished");
-
         if (data != null && data.moveToFirst()) {
+
             // Read weather condition ID from cursor
-
-
-            //read weather icon from cursor
             int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
+            // Use weather art image
             mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
-
-            // Read description from cursor and update view
-            String description = data.getString(COL_WEATHER_DESC);
-            mForecastView.setText(description);
 
             // Read date from cursor and update views for day of week and date
             long date = data.getLong(COL_WEATHER_DATE);
             String friendlyDateText = Utility.getDayName(getActivity(), date);
             String dateText = Utility.getFormattedMonthDay(getActivity(), date);
-            mFriendlyDateview.setText(friendlyDateText);
+            mFriendlyDateView.setText(friendlyDateText);
             mDateView.setText(dateText);
 
+            // Read description from cursor and update view
+            String description = data.getString(COL_WEATHER_DESC);
+            mForecastView.setText(description);
+
+            // Read high temperature from cursor and update view
             boolean isMetric = Utility.isMetric(getActivity());
 
-            //read high temp from cursor
             double high = data.getDouble(COL_WEATHER_MAX_TEMP);
             String highString = Utility.formatTemperature(getActivity(), high, isMetric);
             mHighView.setText(highString);
 
 
-            //read low temp from cursor
+            // Read low temperature from cursor and update view
             double low = data.getDouble(COL_WEATHER_MIN_TEMP);
             String lowString = Utility.formatTemperature(getActivity(), low, isMetric);
             mLowView.setText(lowString);
 
-            //read humidity from cursor
+            // Read humidity from cursor and update view
             float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
             mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
 
-            //read wind speed from cursor
-            float windSpeed = data.getFloat(COL_WEATHER_WIND_SPEED);
+            // Read wind speed and direction from cursor and update view
+            float windSpeedStr = data.getFloat(COL_WEATHER_WIND_SPEED);
             float windDirStr = data.getFloat(COL_WEATHER_DEGREES);
-            mWindView.setText(getActivity().getString(R.string.format_wind_kmh, windSpeed, windDirStr));
+            mWindView.setText(Utility.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
 
-            //read pressure from cursor
+            // Read pressure from cursor and update view
             float pressure = data.getFloat(COL_WEATHER_PRESSURE);
-            mPressureview.setText(getActivity().getString(R.string.format_pressure, pressure));
+            mPressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
 
-
+            // We still need this for the share intent
             mForecast = String.format("%s - %s - %s/%s", dateText, description, high, low);
 
-//            TextView detailTextView = (TextView) getView().findViewById(R.id.detail_text);
-//            detailTextView.setText(mForecast);
-
-            //If onCreateOptionsMenu has already happed, we need to updat eh share intent
-
+            // If onCreateOptionsMenu has already happened, we need to update the share intent now.
             if (mShareActionProvider != null) {
                 mShareActionProvider.setShareIntent(createShareForecastIntent());
             }
-
-
         }
     }
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
