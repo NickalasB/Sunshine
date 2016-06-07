@@ -15,18 +15,18 @@
             android:id="@+id/detail_item_friendly_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:fontFamily="sans-serif-condensed"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/detail_item_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
             android:paddingBottom="24dp"
-            android:textSize="16sp"
-            android:textColor="#646464"/>
+            android:paddingTop="8dp"
+            android:textColor="#646464"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,18 +45,18 @@
                     android:id="@+id/detail_item_high_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="96sp"
-                    android:textColor="@android:color/black"
+                    android:layout_gravity="center"
                     android:fontFamily="sans-serif-condensed"
-                    android:layout_gravity="center"/>
+                    android:textColor="@android:color/black"
+                    android:textSize="96sp" />
 
                 <TextView
                     android:id="@+id/detail_item_low_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="48sp"
+                    android:layout_gravity="center"
                     android:fontFamily="sans-serif-condensed"
-                    android:layout_gravity="center"/>
+                    android:textSize="48sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -70,15 +70,15 @@
                     android:id="@+id/detail_item_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center" />
 
                 <TextView
                     android:id="@+id/detail_item_forecast_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:textAppearance="@android:style/TextAppearance.Large"
-                    android:textColor="#646464"
-                    android:layout_gravity="center"/>
+                    android:textColor="#646464" />
             </LinearLayout>
         </LinearLayout>
 
@@ -87,22 +87,27 @@
             android:id="@+id/detail_item_humidity_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Large"/>
+            android:textAppearance="@android:style/TextAppearance.Large" />
 
         <TextView
             android:id="@+id/detail_wind_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Large"
-            android:paddingTop="4dp"
             android:paddingBottom="4dp"
-            />
+            android:paddingTop="4dp"
+            android:textAppearance="@android:style/TextAppearance.Large" />
 
         <TextView
             android:id="@+id/detail_pressure_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@android:style/TextAppearance.Large" />
+
+        <com.example.android.sunshine.app.Compass
+            android:id="@+id/mycompass"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="5dp" />
 
     </LinearLayout>
 
