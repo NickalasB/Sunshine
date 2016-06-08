@@ -1,4 +1,4 @@
-package com.example.android.sunshine.app.Sync;
+package com.example.android.sunshine.app.sync;
 
 /**
  * Created by nickbradshaw on 6/8/16.
