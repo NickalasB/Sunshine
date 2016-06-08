@@ -32,6 +32,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.sunshine.app.data.WeatherContract;
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
@@ -194,9 +195,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
 
     public void updateWeather() {
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        String location = Utility.getPreferredLocation(getActivity());
-        weatherTask.execute(location);
+        //String location = Utility.getPreferredLocation(getActivity());
+        //new FetchWeatherTask(getActivity()).execute(location);
+        SunshineSyncAdapter.syncImmediately(getActivity());
+
     }
 
     @Override
