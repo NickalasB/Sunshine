@@ -133,6 +133,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT,
                 mForecast + FORECAST_SHARE_HASHTAG);
+
         return shareIntent;
     }
 
