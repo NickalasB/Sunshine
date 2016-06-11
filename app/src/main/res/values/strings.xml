@@ -92,4 +92,7 @@
     <string name="pref_last_notification">last_notification
     </string>
 
+    <!--Notification Strings-->
+    <string name="notif_wx_title">Sunshine weather update</string>
+
 </resources>
