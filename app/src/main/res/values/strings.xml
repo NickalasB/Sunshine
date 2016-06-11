@@ -84,4 +84,15 @@
     <string name="sync_account_type">sunshine.example.com</string>
     <string name="content_authority">com.example.android.sunshine.app</string>
 
+    <!-- Notification Format -->
+    <string name="format_notification">
+    Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s</xliff:g> Low: <xliff:g id="low">%3$s</xliff:g>
+    </string>
+    <!-- Strings related to Notification preference -->
+    <string name="pref_last_notification">last_notification
+    </string>
+
+    <!--Notification Strings-->
+    <string name="notif_wx_title">Sunshine weather update</string>
+
 </resources>
