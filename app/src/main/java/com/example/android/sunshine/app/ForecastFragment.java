@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
@@ -105,7 +106,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
-//        updateWeather();
+        updateWeather();
 
     }
 
@@ -120,10 +121,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-//        if (id == R.id.action_refresh) {
-//            updateWeather();
-//            return true;
-//        }
+
 
         if (id == R.id.action_map) {
             openPreferredLocationInMap();
@@ -181,6 +179,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         // Get a reference to the ListView, and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
+
+        //if there is no data then use this view
+        View emptyView = rootView.findViewById(R.id.no_wx_data_view);
+        mListView.setEmptyView(emptyView);
+
         mListView.setAdapter(mForecastAdapter);
         // We'll call our MainActivity
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -275,6 +278,21 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
 
+    public void updateEmptyView(){
+        if (mForecastAdapter.getCount() == 0){
+            TextView tv = (TextView)getView().findViewById(R.id.no_wx_data_view);
+             if (null != tv){
+                 //if cursor is empty why? do we have an invalid location?
+                 int message = R.string.empty_weather_data_string;
+                 if (!Utility.isNetworkAvailable(getActivity()));{
+                     message = R.string.no_network_string;
+                 }
+                 tv.setText(message);
+             }
+        }
+
+    }
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mForecastAdapter.swapCursor(data);
@@ -283,6 +301,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             // to, do so now.
             mListView.smoothScrollToPosition(mPosition);
         }
+        updateEmptyView();
 
     }
 
