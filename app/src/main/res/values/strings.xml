@@ -23,7 +23,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Label for the location preference [CHAR LIMIT=30] -->
-    <string name="pref_location_label">Location</string>
+    <string name="pref_location_label">Location (zip, city or state)</string>
 
     <!-- Key name for storing location in SharedPreferences [CHAR LIMIT=NONE] -->
     <string name="pref_location_key" translatable="false">location</string>
@@ -102,12 +102,19 @@
     <string name="pref_enable_notifications_false">Not Enabled</string>
     <string name="pref_enable_notifications_default" translatable="false">true</string>
 
+    <!-- Strings used when displaying the state of the Location in settings -->
+    <string name="pref_location_error_description">Invalid Location (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
+    <string name="pref_location_unknown_description">Validating Location... (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
 
+
+    <!-- Strings used when there is no data available for some reason-->
     <string name="empty_forecast_list">No weather data available. The network is not available to fetch weather data</string>
     <string name="empty_forecast_list_no_network">No weather information available. The network is not available to retrieve weather data.</string>
     <string name="empty_forecast_list_server_down">No weather information available. The server is not returning data.</string>
     <string name="empty_forecast_list_server_error">No weather information available. The server is not returning valid data. Please check for an updated version of Sunshine.</string>
     <string name="empty_forecast_list_invalid_location">No weather information available. The location in this setting is not recognized by the weather server</string>
+
+
 
 
 </resources>
