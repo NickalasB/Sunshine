@@ -16,9 +16,11 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -40,7 +42,8 @@ import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
-public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private final String LOG_TAG = ForecastFragment.class.getSimpleName();
 
@@ -108,6 +111,25 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         setHasOptionsMenu(true);
         updateWeather();
 
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mForecastAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onResume() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.registerOnSharedPreferenceChangeListener((SharedPreferences.OnSharedPreferenceChangeListener) this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.unregisterOnSharedPreferenceChangeListener((SharedPreferences.OnSharedPreferenceChangeListener) this);
+        super.onPause();
     }
 
     @Override
@@ -283,15 +305,30 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             TextView tv = (TextView)getView().findViewById(R.id.no_wx_data_view);
              if (null != tv){
                  //if cursor is empty why? do we have an invalid location?
-                 int message = R.string.empty_weather_data_string;
+                 int message = R.string.empty_forecast_list;
+                 @SunshineSyncAdapter.LocationStatus int location = Utility.getLocationStatus(getActivity());
                  if (!Utility.isNetworkAvailable(getActivity()));{
-                     message = R.string.no_network_string;
+                     switch (location){
+                         case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
+                             message = R.string.empty_forecast_list_server_down;
+                             break;
+                         case SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
+                             message = R.string.empty_forecast_list_server_error;
+                             break;
+                         case SunshineSyncAdapter.LOCATION_STATUS_INVALID:
+                             message = R.string.empty_forecast_list_invalid_location;
+                             break;
+                         default:
+                             if(!Utility.isNetworkAvailable(getActivity()));
+                             message = R.string.empty_forecast_list_no_network;
+                     }
                  }
                  tv.setText(message);
              }
         }
 
     }
+
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
@@ -305,9 +342,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mForecastAdapter.swapCursor(null);
-    }
 
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if ( key.equals(getString(R.string.pref_location_status_key)) ) {
+            updateEmptyView();
+        }
+    }
 }

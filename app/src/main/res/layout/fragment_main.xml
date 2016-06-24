@@ -14,7 +14,7 @@
         android:id="@+id/no_wx_data_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/empty_weather_data_string"
+        android:text="@string/empty_forecast_list"
         android:padding="16dp"
         />
 
