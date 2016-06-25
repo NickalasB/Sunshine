@@ -107,7 +107,8 @@
             android:id="@+id/mycompass"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"/>
 
     </LinearLayout>
 
