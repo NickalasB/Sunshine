@@ -91,8 +91,9 @@
 
             <ImageView
                 android:id="@+id/detail_item_icon"
-                android:layout_width="144dp"
-                android:layout_height="144dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"/>
 
             <TextView
                 android:id="@+id/detail_item_forecast_textview"
