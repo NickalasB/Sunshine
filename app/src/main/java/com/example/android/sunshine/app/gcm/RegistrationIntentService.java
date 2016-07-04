@@ -15,6 +15,8 @@
  */
 package com.example.android.sunshine.app.gcm;
 
+
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,7 +27,6 @@ import com.example.android.sunshine.app.MainActivity;
 import com.example.android.sunshine.app.R;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
-
 
 public class RegistrationIntentService extends IntentService {
     private static final String TAG = "RegIntentService";
@@ -51,6 +52,8 @@ public class RegistrationIntentService extends IntentService {
                 if ( senderId.length() != 0 ) {
                     String token = instanceID.getToken(senderId,
                             GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                    Log.i(TAG, "my token:: " + token);
+
                     sendRegistrationToServer(token);
                 }
 

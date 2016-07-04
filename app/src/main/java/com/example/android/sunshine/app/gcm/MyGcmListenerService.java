@@ -33,6 +33,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 
 public class MyGcmListenerService extends GcmListenerService {
 
+
     private static final String TAG = "MyGcmListenerService";
 
     private static final String EXTRA_DATA = "data";
