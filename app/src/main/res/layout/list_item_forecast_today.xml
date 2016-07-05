@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/sunshine_blue"
+    android:background="@color/primary"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
     android:paddingLeft="60dp"
     android:paddingStart="60dp"
     android:paddingTop="16dp"
-    android:windowBackground="@color/sunshine_blue">
+    android:windowBackground="@color/primary">
 
 
     <LinearLayout
@@ -16,9 +16,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:background="@color/sunshine_blue"
+        android:background="@color/primary"
         android:orientation="vertical"
-        android:windowBackground="@color/sunshine_blue">
+        android:windowBackground="@color/primary">
 
         <TextView
             android:id="@+id/list_item_date_textview"
