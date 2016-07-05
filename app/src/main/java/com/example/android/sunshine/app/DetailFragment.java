@@ -74,12 +74,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private ImageView mIconView;
     private TextView mForecastView;
     private TextView mFriendlyDateView;
-    private TextView mDateView;
     private TextView mHighView;
     private TextView mLowView;
     private TextView mHumidityView;
+    private TextView mHumidityLabelView;
+
     private TextView mWindView;
+    private TextView mWindLabelView;
+
     private TextView mPressureView;
+    private TextView mPressureLabelView;
+
     private Compass mCompass;
 
     public DetailFragment() {
@@ -99,12 +104,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mIconView = (ImageView) rootView.findViewById(R.id.detail_item_icon);
         mForecastView = (TextView) rootView.findViewById(R.id.detail_item_forecast_textview);
         mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_item_friendly_date_textview);
-        mDateView = (TextView) rootView.findViewById(R.id.detail_item_date_textview);
         mHighView = (TextView) rootView.findViewById(R.id.detail_item_high_textview);
         mLowView = (TextView) rootView.findViewById(R.id.detail_item_low_textview);
+        mHumidityLabelView = (TextView) rootView.findViewById(R.id.detail_item_humidity_label_textview);
         mHumidityView = (TextView) rootView.findViewById(R.id.detail_item_humidity_textview);
-        mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
-        mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
+        mWindLabelView =(TextView) rootView.findViewById(R.id.detail_item_wind_label_textview);
+        mWindView = (TextView) rootView.findViewById(R.id.detail_item_wind_textview);
+        mPressureLabelView = (TextView) rootView.findViewById(R.id.detail_item_pressure_label_textview);
+        mPressureView = (TextView) rootView.findViewById(R.id.detail_item_pressure_textview);
         mCompass = (Compass) rootView.findViewById(R.id.mycompass);
 
 
@@ -192,8 +199,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             long date = data.getLong(COL_WEATHER_DATE);
             String friendlyDateText = Utility.getDayName(getActivity(), date);
             String dateText = Utility.getFormattedMonthDay(getActivity(), date);
-            mFriendlyDateView.setText(friendlyDateText);
-            mDateView.setText(dateText);
+            mFriendlyDateView.setText(friendlyDateText + "," + " " + dateText);
 
             // Read description from cursor and update view
             String description = data.getString(COL_WEATHER_DESC);
@@ -218,11 +224,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // Read humidity from cursor and update view
             float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
             mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
+            mHumidityLabelView.setContentDescription(mHumidityView.getContentDescription());
+
 
             // Read wind speed and direction from cursor and update view
             float windSpeedStr = data.getFloat(COL_WEATHER_WIND_SPEED);
             float windDirStr = data.getFloat(COL_WEATHER_DEGREES);
             mWindView.setText(Utility.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
+            mWindLabelView.setContentDescription(mWindView.getContentDescription());
+
 
             //Set wind direction is custom view
             if (mCompass != null){
@@ -232,6 +242,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // Read pressure from cursor and update view
             float pressure = data.getFloat(COL_WEATHER_PRESSURE);
             mPressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
+            mPressureLabelView.setContentDescription(mPressureView.getContentDescription());
+
 
             // We still need this for the share intent
             mForecast = String.format("%s - %s - %s/%s", dateText, description, high, low);
