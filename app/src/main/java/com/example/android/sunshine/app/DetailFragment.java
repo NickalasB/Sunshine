@@ -224,8 +224,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // Read humidity from cursor and update view
             float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
             mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
+            mHumidityView.setContentDescription(getString(R.string.a11y_humidity, mHumidityView.getText()));
             mHumidityLabelView.setContentDescription(mHumidityView.getContentDescription());
-
 
             // Read wind speed and direction from cursor and update view
             float windSpeedStr = data.getFloat(COL_WEATHER_WIND_SPEED);
