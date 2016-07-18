@@ -99,19 +99,20 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         if (arguments != null) {
             mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
         }
+        View rootView = inflater.inflate(R.layout.fragment_detail_start, container, false);
 
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        mIconView = (ImageView) rootView.findViewById(R.id.detail_item_icon);
-        mForecastView = (TextView) rootView.findViewById(R.id.detail_item_forecast_textview);
-        mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_item_friendly_date_textview);
-        mHighView = (TextView) rootView.findViewById(R.id.detail_item_high_textview);
-        mLowView = (TextView) rootView.findViewById(R.id.detail_item_low_textview);
-        mHumidityLabelView = (TextView) rootView.findViewById(R.id.detail_item_humidity_label_textview);
-        mHumidityView = (TextView) rootView.findViewById(R.id.detail_item_humidity_textview);
-        mWindLabelView =(TextView) rootView.findViewById(R.id.detail_item_wind_label_textview);
-        mWindView = (TextView) rootView.findViewById(R.id.detail_item_wind_textview);
-        mPressureLabelView = (TextView) rootView.findViewById(R.id.detail_item_pressure_label_textview);
-        mPressureView = (TextView) rootView.findViewById(R.id.detail_item_pressure_textview);
+//        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
+        mForecastView = (TextView) rootView.findViewById(R.id.detail_forecast_textview);
+        mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
+        mHighView = (TextView) rootView.findViewById(R.id.detail_high_textview);
+        mLowView = (TextView) rootView.findViewById(R.id.detail_low_textview);
+        mHumidityLabelView = (TextView) rootView.findViewById(R.id.detail_humidity_label_textview);
+        mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
+        mWindLabelView =(TextView) rootView.findViewById(R.id.detail_wind_label_textview);
+        mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
+        mPressureLabelView = (TextView) rootView.findViewById(R.id.detail_pressure_label_textview);
+        mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
         mCompass = (Compass) rootView.findViewById(R.id.mycompass);
 
 
@@ -177,6 +178,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     null
             );
         }
+        getView().setVisibility(View.INVISIBLE);
         return null;
     }
 
@@ -184,6 +186,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
+            getView().setVisibility(View.VISIBLE);
             // Read weather condition ID from cursor
             int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
 
@@ -248,10 +251,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // We still need this for the share intent
             mForecast = String.format("%s - %s - %s/%s", dateText, description, high, low);
 
-            // If onCreateOptionsMenu has already happened, we need to update the share intent now.
-            if (mShareActionProvider != null) {
-                mShareActionProvider.setShareIntent(createShareForecastIntent());
-            }
+//            // If onCreateOptionsMenu has already happened, we need to update the share intent now.
+//            if (mShareActionProvider != null) {
+//                mShareActionProvider.setShareIntent(createShareForecastIntent());
+//            }
         }
     }
 

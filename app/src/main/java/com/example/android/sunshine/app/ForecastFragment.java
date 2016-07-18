@@ -203,7 +203,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
 
         //if there is no data then use this view
-        View emptyView = rootView.findViewById(R.id.no_wx_data_view);
+        View emptyView = rootView.findViewById(R.id.listview_forecast_empty);
         mListView.setEmptyView(emptyView);
 
         mListView.setAdapter(mForecastAdapter);
@@ -302,7 +302,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void updateEmptyView(){
         if (mForecastAdapter.getCount() == 0){
-            TextView tv = (TextView)getView().findViewById(R.id.no_wx_data_view);
+            TextView tv = (TextView)getView().findViewById(R.id.listview_forecast_empty);
              if (null != tv){
                  //if cursor is empty why? do we have an invalid location?
                  int message = R.string.empty_forecast_list;
