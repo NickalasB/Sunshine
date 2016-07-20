@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="fragment_detail_start" type="layout">@layout/fragment_detail_twopane</item>
+    <item type="layout" name="fragment_detail_start">@layout/fragment_detail_twopane</item>
 </resources>
+
 
