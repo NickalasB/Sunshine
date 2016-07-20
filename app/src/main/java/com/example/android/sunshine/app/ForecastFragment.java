@@ -37,7 +37,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.android.sunshine.app.data.WeatherContract;
-import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
@@ -257,7 +256,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public void updateWeather() {
         //String location = Utility.getPreferredLocation(getActivity());
         //new FetchWeatherTask(getActivity()).execute(location);
-        SunshineSyncAdapter.syncImmediately(getActivity());
+        com.example.android.sunshine.app.sync.SunshineSyncAdapter.syncImmediately(getActivity());
+
 
     }
 
@@ -306,16 +306,16 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
              if (null != tv){
                  //if cursor is empty why? do we have an invalid location?
                  int message = R.string.empty_forecast_list;
-                 @SunshineSyncAdapter.LocationStatus int location = Utility.getLocationStatus(getActivity());
+                 @com.example.android.sunshine.app.sync.SunshineSyncAdapter.LocationStatus int location = Utility.getLocationStatus(getActivity());
                  if (!Utility.isNetworkAvailable(getActivity()));{
                      switch (location){
-                         case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
+                         case com.example.android.sunshine.app.sync.SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
                              message = R.string.empty_forecast_list_server_down;
                              break;
-                         case SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
+                         case com.example.android.sunshine.app.sync.SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
                              message = R.string.empty_forecast_list_server_error;
                              break;
-                         case SunshineSyncAdapter.LOCATION_STATUS_INVALID:
+                         case com.example.android.sunshine.app.sync.SunshineSyncAdapter.LOCATION_STATUS_INVALID:
                              message = R.string.empty_forecast_list_invalid_location;
                              break;
                          default:
