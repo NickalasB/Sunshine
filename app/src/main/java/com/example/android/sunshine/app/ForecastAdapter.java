@@ -26,18 +26,18 @@ public class ForecastAdapter extends CursorAdapter {
      * Cache of the children views for a forecast list item.
      */
     public static class WeatherViewHolder {
-        public final ImageView iconView;
-        public final TextView dateView;
-        public final TextView forecastView;
-        public final TextView highView;
-        public final TextView lowView;
+        public final ImageView miconView;
+        public final TextView mdateView;
+        public final TextView mforecastView;
+        public final TextView mhighView;
+        public final TextView mlowView;
 
         public WeatherViewHolder(View view) {
-            iconView = (ImageView) view.findViewById(R.id.list_item_icon);
-            dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
-            forecastView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
-            highView = (TextView) view.findViewById(R.id.list_item_high_textview);
-            lowView = (TextView) view.findViewById(R.id.list_item_low_textview);
+            miconView = (ImageView) view.findViewById(R.id.list_item_icon);
+            mdateView = (TextView) view.findViewById(R.id.list_item_date_textview);
+            mforecastView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
+            mhighView = (TextView) view.findViewById(R.id.list_item_high_textview);
+            mlowView = (TextView) view.findViewById(R.id.list_item_low_textview);
         }
     }
 
@@ -85,39 +85,60 @@ public class ForecastAdapter extends CursorAdapter {
 
         int viewType = getItemViewType(cursor.getPosition());
         int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
-        int fallbackIconId;
-        switch (viewType) {
-            case VIEW_TYPE_TODAY: {
-                // Get weather icon
-                fallbackIconId = Utility.getArtResourceForWeatherCondition(
-                        weatherId);
+
+        int defaultImage;
+        switch (getItemViewType(cursor.getPosition())){
+            case VIEW_TYPE_TODAY:
+                defaultImage = Utility.getArtResourceForWeatherCondition(weatherId);
                 break;
-            }
-            default: {
-                // Get weather icon
-                fallbackIconId = Utility.getIconResourceForWeatherCondition(
-                        weatherId);
-                break;
-            }
+            default:
+                defaultImage = Utility.getIconResourceForWeatherCondition(weatherId);
         }
 
-        Glide.with(mContext)
-                .load(Utility.getArtUrlForWeatherCondition(mContext, weatherId))
-                .error(fallbackIconId)
-                .crossFade()
-                .into(weatherViewHolder.iconView);
+        if (Utility.usingLocalGraphics(mContext)){
+            weatherViewHolder.miconView.setImageResource(defaultImage);
+        }else {
+            Glide.with(mContext)
+                    .load(Utility.getArtUrlForWeatherCondition(mContext, weatherId))
+                    .error(defaultImage)
+                    .crossFade()
+                    .into(weatherViewHolder.miconView);
+        }
+
+
+//        int fallbackIconId;
+//        switch (viewType) {
+//            case VIEW_TYPE_TODAY: {
+//                // Get weather icon
+//                fallbackIconId = Utility.getArtResourceForWeatherCondition(
+//                        weatherId);
+//                break;
+//            }
+//            default: {
+//                // Get weather icon
+//                fallbackIconId = Utility.getIconResourceForWeatherCondition(
+//                        weatherId);
+//                break;
+//            }
+//        }
+//
+//        Glide.with(mContext)
+//                .load(Utility.getArtUrlForWeatherCondition(mContext, weatherId))
+//                .error(fallbackIconId)
+//                .crossFade()
+//                .into(weatherViewHolder.miconView);
 
 
         //read date info from cursor
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
-        weatherViewHolder.dateView.setText(Utility.getFriendlyDayString(context, dateInMillis));
+        weatherViewHolder.mdateView.setText(Utility.getFriendlyDayString(context, dateInMillis));
 
         // Read weather forecast from cursor
         String weatherForecst = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
-        weatherViewHolder.forecastView.setText(weatherForecst);
+        weatherViewHolder.mforecastView.setText(weatherForecst);
 
         //for accessibilty, add a content description to the icon field
-        weatherViewHolder.iconView.setContentDescription(weatherForecst);
+        weatherViewHolder.miconView.setContentDescription(weatherForecst);
 
 
         // Read user preference for metric or imperial temperature units
@@ -125,10 +146,10 @@ public class ForecastAdapter extends CursorAdapter {
 
         // Read high temperature from cursor
         double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
-        weatherViewHolder.highView.setText(Utility.formatTemperature(context, high, isMetric));
+        weatherViewHolder.mhighView.setText(Utility.formatTemperature(context, high, isMetric));
 
         double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
-        weatherViewHolder.lowView.setText(Utility.formatTemperature(context, low, isMetric));
+        weatherViewHolder.mlowView.setText(Utility.formatTemperature(context, low, isMetric));
     }
 
     public void setUseTodayLayout(boolean useTodayLayout){
