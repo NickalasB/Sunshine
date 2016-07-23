@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.android.sunshine.app.data.WeatherContract;
 
 /**
  * {@link ForecastAdapter} exposes a list of weather forecasts
@@ -17,34 +18,48 @@ import com.bumptech.glide.Glide;
  */
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapterViewHolder> {
 
-    // Flag to determine if we want to use a separate view for "today".
-    private boolean mUseTodayLayout = true;
-
-    private static final int VIEW_TYPE_COUNT = 2;
     private static final int VIEW_TYPE_TODAY = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
 
+    // Flag to determine if we want to use a separate view for "today".
+    private boolean mUseTodayLayout = true;
+
     private Cursor mCursor;
     final private Context mContext;
+    final private ForecastAdapterOnClickHandler mClickHandler;
+    final private View mEmptyView;
 
-    
-
-
-    public class ForecastAdapterViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * Cache of the children views for a forecast list item.
+     */
+    public class ForecastAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final ImageView mIconView;
-        public final TextView mdateView;
-        public final TextView mforecastView;
-        public final TextView mhighView;
-        public final TextView mlowView;
+        public final TextView mDateView;
+        public final TextView mDescriptionView;
+        public final TextView mHighTempView;
+        public final TextView mLowTempView;
 
         public ForecastAdapterViewHolder(View view) {
             super(view);
             mIconView = (ImageView) view.findViewById(R.id.list_item_icon);
-            mdateView = (TextView) view.findViewById(R.id.list_item_date_textview);
-            mforecastView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
-            mhighView = (TextView) view.findViewById(R.id.list_item_high_textview);
-            mlowView = (TextView) view.findViewById(R.id.list_item_low_textview);
+            mDateView = (TextView) view.findViewById(R.id.list_item_date_textview);
+            mDescriptionView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
+            mHighTempView = (TextView) view.findViewById(R.id.list_item_high_textview);
+            mLowTempView = (TextView) view.findViewById(R.id.list_item_low_textview);
+            view.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            mCursor.moveToPosition(adapterPosition);
+            int dateColumnIndex = mCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE);
+            mClickHandler.onClick(mCursor.getLong(dateColumnIndex), this);
+        }
+    }
+
+    public static interface ForecastAdapterOnClickHandler {
+        void onClick(Long date, ForecastAdapterViewHolder vh);
     }
 
     /**
@@ -65,8 +80,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
 //            mlowView = (TextView) recyclerView.findViewById(R.id.list_item_low_textview);
 //        }
 //    }
-    public ForecastAdapter(Context context) {
+    public ForecastAdapter(Context context, ForecastAdapterOnClickHandler dh, View emptyView) {
         mContext = context;
+        mClickHandler = dh;
+        mEmptyView = emptyView;
 
     }
 
@@ -159,11 +176,11 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
 
         //read date info from cursor
         long dateInMillis = mCursor.getLong(ForecastFragment.COL_WEATHER_DATE);
-        forecastAdapterViewHolder.mdateView.setText(Utility.getFriendlyDayString(mContext, dateInMillis));
+        forecastAdapterViewHolder.mDateView.setText(Utility.getFriendlyDayString(mContext, dateInMillis));
 
         // Read weather forecast from cursor
         String weatherForecst = mCursor.getString(ForecastFragment.COL_WEATHER_DESC);
-        forecastAdapterViewHolder.mforecastView.setText(weatherForecst);
+        forecastAdapterViewHolder.mDescriptionView.setText(weatherForecst);
 
         //for accessibilty, add a content description to the icon field
         forecastAdapterViewHolder.mIconView.setContentDescription(weatherForecst);
@@ -174,10 +191,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
 
         // Read high temperature from cursor
         double high = mCursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
-        forecastAdapterViewHolder.mhighView.setText(Utility.formatTemperature(mContext, high, isMetric));
+        forecastAdapterViewHolder.mHighTempView.setText(Utility.formatTemperature(mContext, high, isMetric));
 
         double low = mCursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
-        forecastAdapterViewHolder.mlowView.setText(Utility.formatTemperature(mContext, low, isMetric));
+        forecastAdapterViewHolder.mLowTempView.setText(Utility.formatTemperature(mContext, low, isMetric));
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {
@@ -198,6 +215,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     public void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
         notifyDataSetChanged();
+        mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     public Cursor getCursor() {
