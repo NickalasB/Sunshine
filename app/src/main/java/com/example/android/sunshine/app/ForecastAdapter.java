@@ -3,6 +3,7 @@ package com.example.android.sunshine.app;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,24 +67,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         void onClick(Long date, ForecastAdapterViewHolder vh);
     }
 
-    /**
-     * Cache of the children views for a forecast list item.
-     */
-//    public static class WeatherViewHolder {
-//        public final ImageView miconView;
-//        public final TextView mdateView;
-//        public final TextView mforecastView;
-//        public final TextView mhighView;
-//        public final TextView mlowView;
-//
-//        public WeatherViewHolder(RecyclerView recyclerView) {
-//            miconView = (ImageView) recyclerView.findViewById(R.id.list_item_icon);
-//            mdateView = (TextView) recyclerView.findViewById(R.id.list_item_date_textview);
-//            mforecastView = (TextView) recyclerView.findViewById(R.id.list_item_forecast_textview);
-//            mhighView = (TextView) recyclerView.findViewById(R.id.list_item_high_textview);
-//            mlowView = (TextView) recyclerView.findViewById(R.id.list_item_low_textview);
-//        }
-//    }
+
     public ForecastAdapter(Context context, ForecastAdapterOnClickHandler dh, View emptyView, int choiceMode) {
         mContext = context;
         mClickHandler = dh;
@@ -122,30 +106,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         }
     }
 
-//    /*
-//    Remember that these views are reused as needed.
-// */
-//    @Override
-//    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-//        //chose the layout type
-//        int viewType = getItemViewType(cursor.getPosition());
-//        int layoutId = -1;
-//        switch (viewType) {
-//            case VIEW_TYPE_TODAY: {
-//                layoutId = R.layout.list_item_forecast_today;
-//                break;
-//            }
-//            case VIEW_TYPE_FUTURE_DAY: {
-//                layoutId = R.layout.list_item_forecast;
-//                break;
-//            }
-//        }
-//        RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(layoutId, parent, false);
-//        WeatherViewHolder viewHolder = new WeatherViewHolder(recyclerView);
-//        recyclerView.setTag(viewHolder);
-//
-//        return recyclerView;
-//    }
 
     /*
         This is where we fill-in the views with the contents of the cursor.
@@ -178,6 +138,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
                     .into(forecastAdapterViewHolder.mIconView);
         }
 
+        // this enables better animations. even if we lose state due to a device rotation,
+        // the animator can use this to re-find the original view
+        ViewCompat.setTransitionName(forecastAdapterViewHolder.mIconView, "iconView" + position);
 
         //read date info from cursor
         long dateInMillis = mCursor.getLong(ForecastFragment.COL_WEATHER_DATE);
