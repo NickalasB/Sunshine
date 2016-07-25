@@ -174,9 +174,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 String locationSetting = Utility.getPreferredLocation(getActivity());
                 ((Callback) getActivity())
                         .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                locationSetting, date),
-                                vh
-                        );
+                                locationSetting, date), vh);
                 mPosition = vh.getAdapterPosition();
             }
         }, emptyView, mChoiceMode);
@@ -336,8 +334,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
     }
-
-
 
     @Override
     public void onDestroy() {
