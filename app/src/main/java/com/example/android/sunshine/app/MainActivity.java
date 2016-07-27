@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
         }
     }
-    
+
     /**
      * Check the device to make sure it has the Google Play Services APK. If
      * it doesn't, display a dialog that allows users to download the APK from
