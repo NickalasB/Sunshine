@@ -51,7 +51,7 @@ public class Compass extends View {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(5);
-        paint.setColor(getResources().getColor(R.color.sunshine_dark_blue));
+        paint.setColor(getResources().getColor(R.color.primary_dark));
 
         canvas.drawCircle(w / 2, h / 2, r, paint);
 

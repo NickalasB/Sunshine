@@ -9,13 +9,17 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +33,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
     static final String DETAIL_URI = "URI";
+    static final String DETAIL_TRANSITION_ANIMATION = "DTA";
+
 
 
     private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
@@ -36,6 +42,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private ShareActionProvider mShareActionProvider;
     private String mForecast;
     private Uri mUri;
+    private boolean mTransitionAnimation;
 
     public static final int DETAIL_LOADER = 0;
 
@@ -74,12 +81,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private ImageView mIconView;
     private TextView mForecastView;
     private TextView mFriendlyDateView;
-    private TextView mDateView;
     private TextView mHighView;
     private TextView mLowView;
     private TextView mHumidityView;
+    private TextView mHumidityLabelView;
+
     private TextView mWindView;
+    private TextView mWindLabelView;
+
     private TextView mPressureView;
+    private TextView mPressureLabelView;
+
     private Compass mCompass;
 
     public DetailFragment() {
@@ -93,22 +105,33 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         Bundle arguments = getArguments();
         if (arguments != null) {
             mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
-        }
+            mTransitionAnimation = arguments.getBoolean(DETAIL_TRANSITION_ANIMATION, true);
 
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        mIconView = (ImageView) rootView.findViewById(R.id.detail_item_icon);
-        mForecastView = (TextView) rootView.findViewById(R.id.detail_item_forecast_textview);
-        mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_item_friendly_date_textview);
-        mDateView = (TextView) rootView.findViewById(R.id.detail_item_date_textview);
-        mHighView = (TextView) rootView.findViewById(R.id.detail_item_high_textview);
-        mLowView = (TextView) rootView.findViewById(R.id.detail_item_low_textview);
-        mHumidityView = (TextView) rootView.findViewById(R.id.detail_item_humidity_textview);
+        }
+        View rootView = inflater.inflate(R.layout.fragment_detail_start, container, false);
+
+//        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
+        mForecastView = (TextView) rootView.findViewById(R.id.detail_forecast_textview);
+        mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
+        mHighView = (TextView) rootView.findViewById(R.id.detail_high_textview);
+        mLowView = (TextView) rootView.findViewById(R.id.detail_low_textview);
+        mHumidityLabelView = (TextView) rootView.findViewById(R.id.detail_humidity_label_textview);
+        mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
+        mWindLabelView =(TextView) rootView.findViewById(R.id.detail_wind_label_textview);
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
+        mPressureLabelView = (TextView) rootView.findViewById(R.id.detail_pressure_label_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
         mCompass = (Compass) rootView.findViewById(R.id.mycompass);
 
 
         return rootView;
+    }
+
+    private void finishCreatingMenu(Menu menu) {
+        // Retrieve the share menu item
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+        menuItem.setIntent(createShareForecastIntent());
     }
 
     @Override
@@ -170,6 +193,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     null
             );
         }
+        ViewParent vp = getView().getParent();
+        if (vp instanceof CardView){
+            ((View)vp).setVisibility(View.INVISIBLE);
+        }
         return null;
     }
 
@@ -177,7 +204,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
-            // Read weather condition ID from cursor
+            ViewParent vp = getView().getParent();
+            if (vp instanceof CardView){
+                ((View)vp).setVisibility(View.VISIBLE);
+            }            // Read weather condition ID from cursor
             int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
 
             // Use weather art image
@@ -192,8 +222,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             long date = data.getLong(COL_WEATHER_DATE);
             String friendlyDateText = Utility.getDayName(getActivity(), date);
             String dateText = Utility.getFormattedMonthDay(getActivity(), date);
-            mFriendlyDateView.setText(friendlyDateText);
-            mDateView.setText(dateText);
+            mFriendlyDateView.setText(friendlyDateText + "," + " " + dateText);
 
             // Read description from cursor and update view
             String description = data.getString(COL_WEATHER_DESC);
@@ -218,11 +247,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // Read humidity from cursor and update view
             float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
             mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
+            mHumidityView.setContentDescription(getString(R.string.a11y_humidity, mHumidityView.getText()));
+            mHumidityLabelView.setContentDescription(mHumidityView.getContentDescription());
 
             // Read wind speed and direction from cursor and update view
             float windSpeedStr = data.getFloat(COL_WEATHER_WIND_SPEED);
             float windDirStr = data.getFloat(COL_WEATHER_DEGREES);
             mWindView.setText(Utility.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
+            mWindLabelView.setContentDescription(mWindView.getContentDescription());
+
 
             //Set wind direction is custom view
             if (mCompass != null){
@@ -232,16 +265,40 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // Read pressure from cursor and update view
             float pressure = data.getFloat(COL_WEATHER_PRESSURE);
             mPressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
+            mPressureLabelView.setContentDescription(mPressureView.getContentDescription());
+
 
             // We still need this for the share intent
             mForecast = String.format("%s - %s - %s/%s", dateText, description, high, low);
 
-            // If onCreateOptionsMenu has already happened, we need to update the share intent now.
-            if (mShareActionProvider != null) {
-                mShareActionProvider.setShareIntent(createShareForecastIntent());
+        }
+
+
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
+
+
+        // We need to start the enter transition after the data has loaded
+        if (mTransitionAnimation) {
+            activity.supportStartPostponedEnterTransition();
+
+            if ( null != toolbarView ) {
+                activity.setSupportActionBar(toolbarView);
+
+                activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+        } else {
+            if ( null != toolbarView ) {
+                Menu menu = toolbarView.getMenu();
+                if ( null != menu ) menu.clear();
+                toolbarView.inflateMenu(R.menu.detailfragment);
+                finishCreatingMenu(toolbarView.getMenu());
             }
         }
     }
+
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
