@@ -30,7 +30,6 @@ import android.text.format.Time;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
-import com.example.android.sunshine.app.BuildConfig;
 import com.example.android.sunshine.app.MainActivity;
 import com.example.android.sunshine.app.R;
 import com.example.android.sunshine.app.Utility;
@@ -93,14 +92,16 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public SunshineSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
 
-
     }
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d(LOG_TAG, "Starting sync");
 
+        Context context = getContext();
         String locationQuery = Utility.getPreferredLocation(getContext());
+        String locationLongitude = String.valueOf(Utility.getLocationLongitude(getContext()));
+        String locationLatitude = String.valueOf(Utility.getLocationLatitude(getContext()));
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -127,14 +128,39 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             final String UNITS_PARAM = "units";
             final String DAYS_PARAM = "cnt";
             final String APPID_PARAM = "APPID";
+            final String LAT_PARAM = "lat";
+            final String LON_PARAM = "lon";
 
-            Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                    .appendQueryParameter(QUERY_PARAM, locationQuery)
-                    .appendQueryParameter(FORMAT_PARAM, format)
+
+            Uri.Builder uriBuilder = Uri.parse(FORECAST_BASE_URL).buildUpon();
+
+            // Instead of always building the query based off of the location string, we want to
+            // potentially build a query using a lat/lon value. This will be the case when we are
+            // syncing based off of a new location from the Place Picker API. So we need to check
+            // if we have a lat/lon to work with, and use those when we do. Otherwise, the weather
+            // service may not understand the location address provided by the Place Picker API
+            // and the user could end up with no weather! The horror!
+            if (Utility.isLocationLatLonAvailale(getContext())) {
+                uriBuilder.appendQueryParameter(LAT_PARAM, locationLatitude)
+                        .appendQueryParameter(LON_PARAM, locationLongitude);
+
+            } else {
+                uriBuilder.appendQueryParameter(QUERY_PARAM, locationQuery);
+            }
+
+
+            Uri builtUri = uriBuilder.appendQueryParameter(FORMAT_PARAM, format)
                     .appendQueryParameter(UNITS_PARAM, units)
                     .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
-                    .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_WEATHER_MAP_API_KEY)
                     .build();
+
+//            Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+//                    .appendQueryParameter(QUERY_PARAM, locationQuery)
+//                    .appendQueryParameter(FORMAT_PARAM, format)
+//                    .appendQueryParameter(UNITS_PARAM, units)
+//                    .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+//                    .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_WEATHER_MAP_API_KEY)
+//                    .build();
 
             URL url = new URL(builtUri.toString());
 
@@ -243,10 +269,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
-            if (forecastJson.has(OWM_MESSAGE_CODE)){
+            if (forecastJson.has(OWM_MESSAGE_CODE)) {
                 int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
 
-                switch (errorCode){
+                switch (errorCode) {
                     case HttpURLConnection.HTTP_OK:
 
                         break;
@@ -529,7 +555,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         boolean displayNotifications = prefs.getBoolean(displayNotificationsKey,
                 Boolean.parseBoolean(context.getString(R.string.pref_enable_notifications_default)));
 
-        if ( displayNotifications ) {
+        if (displayNotifications) {
 
             String lastNotificationKey = context.getString(R.string.pref_last_notification);
             long lastSync = prefs.getLong(lastNotificationKey, 0);

@@ -10,6 +10,6 @@
         android:src="@drawable/ic_current_location"
         android:layout_gravity="end|center_vertical"
         android:contentDescription="@string/pref_current_location_desc"
-        android:tint="@color/material_deep_teal_500"/>
+        android:tint="@color/accent"/>
 
 </FrameLayout>

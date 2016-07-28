@@ -15,6 +15,29 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Utility {
+
+    //Well default our latlong to 0.
+    public static float DEFAULT_LATLONG = 0F;
+
+    public static boolean isLocationLatLonAvailale (Context context){
+        SharedPreferences prefs =
+                PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.contains(context.getString(R.string.pref_location_latitutde))
+                && prefs.contains(context.getString(R.string.pref_location_longitude));
+    }
+
+    public static float getLocationLatitude (Context context){
+        SharedPreferences prefs
+                = PreferenceManager.getDefaultSharedPreferences(context);
+        return  prefs.getFloat(context.getString(R.string.pref_location_latitutde), DEFAULT_LATLONG);
+    }
+
+    public static float getLocationLongitude (Context context){
+        SharedPreferences prefs
+                = PreferenceManager.getDefaultSharedPreferences(context);
+        return  prefs.getFloat(context.getString(R.string.pref_location_longitude), DEFAULT_LATLONG);
+    }
+
     public static String getPreferredLocation(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_location_key),
