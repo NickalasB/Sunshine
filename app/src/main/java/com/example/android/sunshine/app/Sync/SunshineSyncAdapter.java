@@ -141,7 +141,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             // if we have a lat/lon to work with, and use those when we do. Otherwise, the weather
             // service may not understand the location address provided by the Place Picker API
             // and the user could end up with no weather! The horror!
-            if (Utility.isLocationLatLonAvailale(getContext())) {
+            if (Utility.isLocationLatLonAvailable(getContext())) {
                 uriBuilder.appendQueryParameter(LAT_PARAM, locationLatitude)
                         .appendQueryParameter(LON_PARAM, locationLongitude);
 

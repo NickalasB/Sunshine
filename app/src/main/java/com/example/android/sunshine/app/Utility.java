@@ -19,7 +19,7 @@ public class Utility {
     //Well default our latlong to 0.
     public static float DEFAULT_LATLONG = 0F;
 
-    public static boolean isLocationLatLonAvailale (Context context){
+    public static boolean isLocationLatLonAvailable (Context context){
         SharedPreferences prefs =
                 PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.contains(context.getString(R.string.pref_location_latitude))
