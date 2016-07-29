@@ -30,6 +30,7 @@ import android.text.format.Time;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
+import com.example.android.sunshine.app.BuildConfig;
 import com.example.android.sunshine.app.MainActivity;
 import com.example.android.sunshine.app.R;
 import com.example.android.sunshine.app.Utility;
@@ -149,18 +150,19 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
 
-            Uri builtUri = uriBuilder.appendQueryParameter(FORMAT_PARAM, format)
-                    .appendQueryParameter(UNITS_PARAM, units)
-                    .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
-                    .build();
-
-//            Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-//                    .appendQueryParameter(QUERY_PARAM, locationQuery)
-//                    .appendQueryParameter(FORMAT_PARAM, format)
+//            Uri builtUri = uriBuilder.appendQueryParameter(FORMAT_PARAM, format)
 //                    .appendQueryParameter(UNITS_PARAM, units)
 //                    .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
 //                    .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_WEATHER_MAP_API_KEY)
 //                    .build();
+
+            Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+                    .appendQueryParameter(QUERY_PARAM, locationQuery)
+                    .appendQueryParameter(FORMAT_PARAM, format)
+                    .appendQueryParameter(UNITS_PARAM, units)
+                    .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+                    .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_WEATHER_MAP_API_KEY)
+                    .build();
 
             URL url = new URL(builtUri.toString());
 

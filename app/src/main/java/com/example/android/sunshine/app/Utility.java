@@ -22,14 +22,14 @@ public class Utility {
     public static boolean isLocationLatLonAvailale (Context context){
         SharedPreferences prefs =
                 PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.contains(context.getString(R.string.pref_location_latitutde))
+        return prefs.contains(context.getString(R.string.pref_location_latitude))
                 && prefs.contains(context.getString(R.string.pref_location_longitude));
     }
 
     public static float getLocationLatitude (Context context){
         SharedPreferences prefs
                 = PreferenceManager.getDefaultSharedPreferences(context);
-        return  prefs.getFloat(context.getString(R.string.pref_location_latitutde), DEFAULT_LATLONG);
+        return  prefs.getFloat(context.getString(R.string.pref_location_latitude), DEFAULT_LATLONG);
     }
 
     public static float getLocationLongitude (Context context){
