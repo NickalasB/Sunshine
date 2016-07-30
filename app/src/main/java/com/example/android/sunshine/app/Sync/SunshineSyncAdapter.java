@@ -57,6 +57,12 @@ import java.util.concurrent.ExecutionException;
 public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public final String LOG_TAG = SunshineSyncAdapter.class.getSimpleName();
 
+
+    public static final  String ACTION_DATA_UPDATED = "com.example.android.sunshine.app.ACTION_DATA_UPDATED";
+
+
+
+
     // Interval at which to sync with the weather, in milliseconds.
     // 60 seconds (1 minute)  180 = 3 hours
     public static final int SYNC_INTERVAL = 60 * 180;
@@ -93,16 +99,23 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public SunshineSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
 
+
     }
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d(LOG_TAG, "Starting sync");
 
+
+
         Context context = getContext();
         String locationQuery = Utility.getPreferredLocation(getContext());
         String locationLongitude = String.valueOf(Utility.getLocationLongitude(getContext()));
         String locationLatitude = String.valueOf(Utility.getLocationLatitude(getContext()));
+
+
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
+        context.sendBroadcast(dataUpdatedIntent);
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
