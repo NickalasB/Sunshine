@@ -14,7 +14,12 @@ import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
  */
 public class TodayWidgetProvider extends AppWidgetProvider {
 
-
+    /**
+     * Provider for a horizontally expandable widget showing today's weather.
+     *
+     * Delegates widget updating to {@link TodayWidgetIntentService} to ensure that
+     * data retrieval is done on a background thread
+     */
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         context.startService(new Intent(context, TodayWidgetIntentService.class));
@@ -25,15 +30,14 @@ public class TodayWidgetProvider extends AppWidgetProvider {
                                           int appWidgetId, Bundle newOptions) {
         context.startService(new Intent(context, TodayWidgetIntentService.class));
     }
+
     @Override
-    public void onReceive(@NonNull Context context,@NonNull Intent intent) {
+    public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
-        if (SunshineSyncAdapter.ACTION_DATA_UPDATED.equals(intent.getAction())){
-            context.startService(new Intent(context, TodayWidgetProvider.class));
+        if (SunshineSyncAdapter.ACTION_DATA_UPDATED.equals(intent.getAction())) {
+            context.startService(new Intent(context, TodayWidgetIntentService.class));
         }
     }
-
-
 }
 
 
