@@ -35,6 +35,8 @@ import com.example.android.sunshine.app.MainActivity;
 import com.example.android.sunshine.app.R;
 import com.example.android.sunshine.app.Utility;
 import com.example.android.sunshine.app.data.WeatherContract;
+import com.example.android.sunshine.app.muzei.WeatherMuzeiSource;
+import com.google.android.apps.muzei.api.MuzeiArtSource;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,6 +58,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public final String LOG_TAG = SunshineSyncAdapter.class.getSimpleName();
+
 
 
     public static final  String ACTION_DATA_UPDATED = "com.example.android.sunshine.app.ACTION_DATA_UPDATED";
@@ -106,8 +109,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d(LOG_TAG, "Starting sync");
 
-
-
         Context context = getContext();
         String locationQuery = Utility.getPreferredLocation(getContext());
         String locationLongitude = String.valueOf(Utility.getLocationLongitude(getContext()));
@@ -116,6 +117,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
         context.sendBroadcast(dataUpdatedIntent);
+
+        //For Muzei
+        context.startService(new Intent(ACTION_DATA_UPDATED)
+                .setClass(getContext(), MuzeiArtSource.class));
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -400,6 +405,8 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                         new String[]{Long.toString(dayTime.setJulianDay(julianStartDay - 1))});
 
                 notifyWeather();
+                updateWidgets();
+                updateMuzei();
             }
             Log.d(LOG_TAG, "Sunshine Service Complete. " + cVVector.size() + " Inserted");
             setLocationStatus(getContext(), LOCATION_STATUS_OK);
@@ -409,6 +416,24 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             e.printStackTrace();
             setLocationStatus(getContext(), LOCATION_STATUS_SERVER_INVALID);
 
+        }
+    }
+
+    private void updateWidgets() {
+        Context context = getContext();
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
+    }
+
+    private void updateMuzei() {
+        // Muzei is only compatible with Jelly Bean MR1+ devices, so there's no need to update the
+        // Muzei background on lower API level devices
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Context context = getContext();
+            context.startService(new Intent(ACTION_DATA_UPDATED)
+                    .setClass(context, WeatherMuzeiSource.class));
         }
     }
 
@@ -682,5 +707,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         spe.putInt(c.getString(R.string.pref_location_status_key), locationStatus);
         spe.commit();
     }
+
 
 }
