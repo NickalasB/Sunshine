@@ -142,7 +142,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 //                    "http://google.com/sdfkljkjf?";
                     "http://api.openweathermap.org/data/2.5/forecast/daily?";
 
-            final String QUERY_PARAM = "zip";
+            final String QUERY_PARAM = "q";
             final String FORMAT_PARAM = "mode";
             final String UNITS_PARAM = "units";
             final String DAYS_PARAM = "cnt";
