@@ -20,7 +20,7 @@
     <dimen name="forecast_text_width">49dp</dimen>
     <dimen name="forecast_temperature_space">8dp</dimen>
 
-    <!-- Extra Padding -->
+       <!-- Extra Padding -->
     <dimen name="detail_view_extra_padding">@dimen/abc_list_item_padding_horizontal_material</dimen>
 
     <!-- Needed if we aren't including the Material Design Library -->

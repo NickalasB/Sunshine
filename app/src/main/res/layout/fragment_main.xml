@@ -53,9 +53,7 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:text="@string/empty_forecast_list"
-            app:layout_anchor="@id/recyclerview_forecast"
-            app:layout_anchorGravity="fill"/>
+            android:text="@string/empty_forecast_list" />
 
 
     </android.support.design.widget.CoordinatorLayout>
