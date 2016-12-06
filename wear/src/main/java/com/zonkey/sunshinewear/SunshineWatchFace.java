@@ -103,6 +103,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         TextView day;
         TextView date;
         TextView month;
+        ImageView icon;
+        TextView highTemp;
+        TextView lowTemp;
         private ImageView sunshineIcon;
         private final Point displaySize = new Point();
 
@@ -141,6 +144,11 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             day = (TextView) mWearLayout.findViewById(R.id.wear_day_textview);
             month = (TextView) mWearLayout.findViewById(R.id.wear_month_textview);
             date = (TextView) mWearLayout.findViewById(R.id.wear_date_textview);
+            icon = (ImageView) mWearLayout.findViewById(R.id.wear_icon_imageview);
+            highTemp = (TextView) mWearLayout.findViewById(R.id.wear_hi_textview);
+            lowTemp = (TextView) mWearLayout.findViewById(R.id.wear_low_textview);
+
+
 
 
             setWatchFaceStyle(new WatchFaceStyle.Builder(SunshineWatchFace.this)
@@ -282,6 +290,12 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             // Draw the background.
             if (isInAmbientMode()) {
                 canvas.drawColor(Color.BLACK);
+                date.setVisibility(View.GONE);
+                month.setVisibility(View.GONE);
+                day.setVisibility(View.GONE);
+                icon.setVisibility(View.GONE);
+                highTemp.setTextSize(40);
+                lowTemp.setTextSize(40);
             } else {
                 canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
                 mWearLayout.measure(specW, specH);
