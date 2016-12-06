@@ -290,16 +290,18 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             // Draw the background.
             if (isInAmbientMode()) {
                 canvas.drawColor(Color.BLACK);
-                date.setVisibility(View.GONE);
-                month.setVisibility(View.GONE);
-                day.setVisibility(View.GONE);
-                icon.setVisibility(View.GONE);
-                highTemp.setTextSize(40);
-                lowTemp.setTextSize(40);
+                date.setVisibility(View.INVISIBLE);
+                month.setVisibility(View.INVISIBLE);
+                day.setVisibility(View.INVISIBLE);
+                icon.setVisibility(View.INVISIBLE);
             } else {
                 canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
                 mWearLayout.measure(specW, specH);
                 mWearLayout.layout(0, 0, mWearLayout.getMeasuredWidth(), mWearLayout.getMeasuredHeight());
+                date.setVisibility(View.VISIBLE);
+                month.setVisibility(View.VISIBLE);
+                day.setVisibility(View.VISIBLE);
+                icon.setVisibility(View.VISIBLE);
                 canvas.drawColor(mBackgroundPaint.getColor());
             }
             mWearLayout.draw(canvas);
