@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/wear_day_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Today"
+            android:text="Today"/>
+
+        <TextView
+            android:id="@+id/wear_month_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="December"
+            android:text="December"/>
+
+        <TextView
+            android:id="@+id/wear_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="05"
+            android:text="05"/>
+    </LinearLayout>
+
+
+</LinearLayout>
