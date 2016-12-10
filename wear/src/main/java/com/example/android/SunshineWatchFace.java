@@ -32,6 +32,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -70,7 +71,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
      * Handler message id for updating the time periodically in interactive mode.
      */
     private static final int MSG_UPDATE_TIME = 0;
-    public static final String ACTION_WEATHER_CHANGED = "ACTION_WEATHER_CHANGED";
+//    public static final String ACTION_WEATHER_CHANGED = "ACTION_WEATHER_CHANGED";
 
     @Override
     public Engine onCreateEngine() {
@@ -112,6 +113,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private TextView month;
         private ImageView icon;
         private TextView highTemp;
+
+        private String maxTemp;
+
         private TextView lowTemp;
         private ImageView sunshineIcon;
         private final Point displaySize = new Point();
@@ -132,7 +136,10 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private final BroadcastReceiver mWeatherReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                highTemp.setText(intent.getStringExtra("high-temp"));
+                maxTemp = intent.getStringExtra("high-temp");
+
+//                highTemp.setText(intent.getStringExtra("high-temp"));
+                Log.i(LOG_TAG, highTemp + " is what the temp is outside");
                 invalidate();
             }
         };
@@ -227,10 +234,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             IntentFilter filter = new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED);
             SunshineWatchFace.this.registerReceiver(mTimeZoneReceiver, filter);
 
-            if (mRegisterdWeatherReceiver) {
-                return;
-            }
-            IntentFilter weatherFilter = new IntentFilter(ACTION_WEATHER_CHANGED);
+            IntentFilter weatherFilter = new IntentFilter("ACTION_WEATHER_CHANGED");
             SunshineWatchFace.this.registerReceiver(mWeatherReceiver, weatherFilter);
         }
 
@@ -327,6 +331,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                 month.setVisibility(View.VISIBLE);
                 day.setVisibility(View.VISIBLE);
                 icon.setVisibility(View.VISIBLE);
+                canvas.drawText(maxTemp, 0, 0, null);
 
                 canvas.drawColor(mBackgroundPaint.getColor());
 

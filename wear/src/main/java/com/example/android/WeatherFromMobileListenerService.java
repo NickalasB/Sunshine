@@ -26,11 +26,17 @@ public class WeatherFromMobileListenerService extends WearableListenerService im
     public static final String HIGH_TEMP = "high-temp";
     public static final String LOW_TEMP = "low-temp";
 
-    private String mMinTemp = "";
-    private String mMaxTemp = "";
-
     GoogleApiClient mGoogleApiClient;
 
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
@@ -39,44 +45,41 @@ public class WeatherFromMobileListenerService extends WearableListenerService im
         for (DataEvent dataEvent : dataEvents) {
             if (dataEvent.getType() == DataEvent.TYPE_CHANGED) {
                 DataItem item = dataEvent.getDataItem();
-                if (item.getUri().getPath().compareTo(WEATHER_DATA) == 0) {
+//                if (item.getUri().getPath().compareTo(WEATHER_DATA) == 0) {
+                if (dataEvent.getType() == DataEvent.TYPE_CHANGED){
 
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
 
-                    Log.i(LOG_TAG, "Nice here's the high temp" + dataMap.getString(HIGH_TEMP));
-                    mMaxTemp = dataMap.getString(HIGH_TEMP);
-                    mMinTemp = dataMap.getString(LOW_TEMP);
+                    String mMaxTemp = dataMap.getString(HIGH_TEMP);
+                    String mMinTemp = dataMap.getString(LOW_TEMP);
 
                     Toast.makeText(this, "High temp from data = " + mMaxTemp, Toast.LENGTH_SHORT).show();
 
                     Intent sendWeatherInent = new Intent("ACTION_WEATHER_CHANGED");
-                    sendWeatherInent.putExtra("high-temp", HIGH_TEMP)
-                            .putExtra("low-temp", LOW_TEMP);
+                    sendWeatherInent.putExtra("high-temp", mMaxTemp)
+                            .putExtra("low-temp", mMinTemp);
                     sendBroadcast(sendWeatherInent);
-
-                    }
-                } else if (dataEvent.getType() == DataEvent.TYPE_DELETED) {
-
+                    Log.i(LOG_TAG, "Nice here's the high temp" + mMaxTemp);
                 }
-            }
+            } else if (dataEvent.getType() == DataEvent.TYPE_DELETED) {
 
+            }
         }
+
+    }
 
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.d(LOG_TAG, "Google API Client was connected");
-
         Wearable.DataApi.addListener(mGoogleApiClient, this);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Wearable.API)
-                .build();
-        mGoogleApiClient.connect();
+        Log.d(LOG_TAG, "Google API Client was connected");
     }
 
     @Override
     public void onConnectionSuspended(int i) {
+        Log.d(LOG_TAG, "Google API Client was suspended");
+
 
     }
 
@@ -84,6 +87,8 @@ public class WeatherFromMobileListenerService extends WearableListenerService im
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Wearable.DataApi.removeListener(mGoogleApiClient, this);
         mGoogleApiClient.connect();
+        Log.d(LOG_TAG, "Google API Client failed");
+
 
     }
 
