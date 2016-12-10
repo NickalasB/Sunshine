@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.zonkey.sunshinewear;
+package com.example.android;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -47,11 +47,15 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+
 /**
  * Digital watch face with seconds. In ambient mode, the seconds aren't displayed. On devices with
  * low-bit ambient mode, the text is drawn without anti-aliasing in ambient mode.
  */
 public class SunshineWatchFace extends CanvasWatchFaceService {
+    public final String LOG_TAG = SunshineWatchFace.class.getSimpleName();
+
+
     private static final Typeface NORMAL_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
 
@@ -66,10 +70,10 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
      * Handler message id for updating the time periodically in interactive mode.
      */
     private static final int MSG_UPDATE_TIME = 0;
+    public static final String ACTION_WEATHER_CHANGED = "ACTION_WEATHER_CHANGED";
 
     @Override
     public Engine onCreateEngine() {
-
         return new Engine();
     }
 
@@ -96,28 +100,39 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
     private class Engine extends CanvasWatchFaceService.Engine {
         final Handler mUpdateTimeHandler = new EngineHandler(this);
         boolean mRegisteredTimeZoneReceiver = false;
-        int specW;
-        int specH;
-        View mWearLayout;
+        boolean mRegisterdWeatherReceiver = false;
 
-        TextView day;
-        TextView date;
-        TextView month;
-        ImageView icon;
-        TextView highTemp;
-        TextView lowTemp;
+
+        private int specW;
+        private int specH;
+        private View mWearLayout;
+
+        private TextView day;
+        private TextView date;
+        private TextView month;
+        private ImageView icon;
+        private TextView highTemp;
+        private TextView lowTemp;
         private ImageView sunshineIcon;
         private final Point displaySize = new Point();
 
 
-        Paint mBackgroundPaint;
-        Paint mTextPaint;
-        boolean mAmbient;
-        Calendar mCalendar;
-        final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
+        private Paint mBackgroundPaint;
+        private Paint mTextPaint;
+        private boolean mAmbient;
+        private Calendar mCalendar;
+        private final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mCalendar.setTimeZone(TimeZone.getDefault());
+                invalidate();
+            }
+        };
+
+        private final BroadcastReceiver mWeatherReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                highTemp.setText(intent.getStringExtra("high-temp"));
                 invalidate();
             }
         };
@@ -133,6 +148,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         @Override
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
+
+            WeatherFromMobileListenerService mobileListenerService = new WeatherFromMobileListenerService();
+
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mWearLayout = inflater.inflate(R.layout.watchface, null);
 
@@ -147,8 +165,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             icon = (ImageView) mWearLayout.findViewById(R.id.wear_icon_imageview);
             highTemp = (TextView) mWearLayout.findViewById(R.id.wear_hi_textview);
             lowTemp = (TextView) mWearLayout.findViewById(R.id.wear_low_textview);
-
-
 
 
             setWatchFaceStyle(new WatchFaceStyle.Builder(SunshineWatchFace.this)
@@ -174,6 +190,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
             super.onDestroy();
         }
+
 
         private Paint createTextPaint(int textColor) {
             Paint paint = new Paint();
@@ -209,6 +226,12 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mRegisteredTimeZoneReceiver = true;
             IntentFilter filter = new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED);
             SunshineWatchFace.this.registerReceiver(mTimeZoneReceiver, filter);
+
+            if (mRegisterdWeatherReceiver) {
+                return;
+            }
+            IntentFilter weatherFilter = new IntentFilter(ACTION_WEATHER_CHANGED);
+            SunshineWatchFace.this.registerReceiver(mWeatherReceiver, weatherFilter);
         }
 
         private void unregisterReceiver() {
@@ -217,6 +240,8 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             }
             mRegisteredTimeZoneReceiver = false;
             SunshineWatchFace.this.unregisterReceiver(mTimeZoneReceiver);
+            mRegisterdWeatherReceiver = false;
+            SunshineWatchFace.this.unregisterReceiver(mWeatherReceiver);
         }
 
         @Override
@@ -302,7 +327,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                 month.setVisibility(View.VISIBLE);
                 day.setVisibility(View.VISIBLE);
                 icon.setVisibility(View.VISIBLE);
+
                 canvas.drawColor(mBackgroundPaint.getColor());
+
             }
             mWearLayout.draw(canvas);
         }
