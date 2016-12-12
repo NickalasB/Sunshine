@@ -137,8 +137,8 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             @Override
             public void onReceive(Context context, Intent intent) {
                 maxTemp = intent.getStringExtra("high-temp");
-
-//                highTemp.setText(intent.getStringExtra("high-temp"));
+                highTemp = (TextView) mWearLayout.findViewById(R.id.wear_hi_textview);
+                highTemp.setText(maxTemp);
                 Log.i(LOG_TAG, highTemp + " is what the temp is outside");
                 invalidate();
             }
