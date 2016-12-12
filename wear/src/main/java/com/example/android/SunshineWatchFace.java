@@ -331,8 +331,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                 month.setVisibility(View.VISIBLE);
                 day.setVisibility(View.VISIBLE);
                 icon.setVisibility(View.VISIBLE);
-                canvas.drawText(maxTemp, 0, 0, null);
-
                 canvas.drawColor(mBackgroundPaint.getColor());
 
             }
