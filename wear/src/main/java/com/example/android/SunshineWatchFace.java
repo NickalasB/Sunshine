@@ -32,7 +32,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -111,20 +110,23 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private TextView day;
         private TextView date;
         private TextView month;
+        
         private ImageView icon;
         private TextView highTemp;
-
-        private String maxTemp;
-
         private TextView lowTemp;
+
+        private String maxTempString;
+        private String minTempString;
+
         private ImageView sunshineIcon;
         private final Point displaySize = new Point();
 
-
         private Paint mBackgroundPaint;
         private Paint mTextPaint;
+
         private boolean mAmbient;
         private Calendar mCalendar;
+
         private final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -136,10 +138,15 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private final BroadcastReceiver mWeatherReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                maxTemp = intent.getStringExtra("high-temp");
+                maxTempString = intent.getStringExtra("high-temp");
                 highTemp = (TextView) mWearLayout.findViewById(R.id.wear_hi_textview);
-                highTemp.setText(maxTemp);
-                Log.i(LOG_TAG, highTemp + " is what the temp is outside");
+                highTemp.setText(maxTempString);
+
+                minTempString = intent.getStringExtra("low-temp");
+                lowTemp = (TextView) mWearLayout.findViewById(R.id.wear_low_textview);
+                lowTemp.setText(minTempString);
+
+
                 invalidate();
             }
         };
@@ -188,7 +195,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
 
             mTextPaint = new Paint();
             mTextPaint = createTextPaint(resources.getColor(R.color.digital_text));
-
             mCalendar = Calendar.getInstance();
         }
 
@@ -197,7 +203,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
             super.onDestroy();
         }
-
 
         private Paint createTextPaint(int textColor) {
             Paint paint = new Paint();

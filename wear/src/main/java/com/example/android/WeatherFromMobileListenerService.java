@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,29 +44,19 @@ public class WeatherFromMobileListenerService extends WearableListenerService im
         for (DataEvent dataEvent : dataEvents) {
             if (dataEvent.getType() == DataEvent.TYPE_CHANGED) {
                 DataItem item = dataEvent.getDataItem();
-//                if (item.getUri().getPath().compareTo(WEATHER_DATA) == 0) {
-                if (dataEvent.getType() == DataEvent.TYPE_CHANGED){
-
+                if (dataEvent.getType() == DataEvent.TYPE_CHANGED) {
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
-
                     String mMaxTemp = dataMap.getString(HIGH_TEMP);
                     String mMinTemp = dataMap.getString(LOW_TEMP);
-
-                    Toast.makeText(this, "High temp from data = " + mMaxTemp, Toast.LENGTH_SHORT).show();
-
                     Intent sendWeatherInent = new Intent("ACTION_WEATHER_CHANGED");
                     sendWeatherInent.putExtra("high-temp", mMaxTemp)
                             .putExtra("low-temp", mMinTemp);
                     sendBroadcast(sendWeatherInent);
                     Log.i(LOG_TAG, "Nice here's the high temp" + mMaxTemp);
                 }
-            } else if (dataEvent.getType() == DataEvent.TYPE_DELETED) {
-
-            }
+            } else if (dataEvent.getType() == DataEvent.TYPE_DELETED) {}
         }
-
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
