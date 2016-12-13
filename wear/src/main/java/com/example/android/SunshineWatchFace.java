@@ -43,7 +43,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -108,9 +110,10 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private int mSpecH;
         private View mWearLayout;
 
-        private TextView mDayTextView;
-        private TextView mMonthTextView;
         private TextView mDateTextView;
+        private Date mDate;
+        private SimpleDateFormat mSimpleDateFormat;
+        private String mFormatedDateString;
 
         private ImageView mIconImageView;
         private TextView mHighTempTextView;
@@ -139,7 +142,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             @Override
             public void onReceive(Context context, Intent intent) {
                 getTemperatures(intent);
-                getCurrentDate();
+                mDateTextView.setText(mFormatedDateString);
                 invalidate();
             }
 
@@ -159,19 +162,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mLowTempTextView.setText(mMinTempString);
         }
 
-        private void getCurrentDate(){
-            String dayOfWeek = mCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-            mDayTextView.setText(dayOfWeek);
-
-            String monthOfYear = mCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
-            mMonthTextView.setText(monthOfYear);
-
-//            mDateTextView.setText(mCalendar.get(Calendar.YEAR));
-
-
-
-        }
-
         @Override
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
@@ -186,13 +176,10 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
 
             mSpecH = View.MeasureSpec.makeMeasureSpec(displaySize.x, View.MeasureSpec.EXACTLY);
             mSpecW = View.MeasureSpec.makeMeasureSpec(displaySize.y, View.MeasureSpec.EXACTLY);
-            mDayTextView = (TextView) mWearLayout.findViewById(R.id.wear_day_textview);
-            mMonthTextView = (TextView) mWearLayout.findViewById(R.id.wear_month_textview);
             mDateTextView = (TextView) mWearLayout.findViewById(R.id.wear_date_textview);
             mIconImageView = (ImageView) mWearLayout.findViewById(R.id.wear_icon_imageview);
             mHighTempTextView = (TextView) mWearLayout.findViewById(R.id.wear_hi_textview);
             mLowTempTextView = (TextView) mWearLayout.findViewById(R.id.wear_low_textview);
-
 
             setWatchFaceStyle(new WatchFaceStyle.Builder(SunshineWatchFace.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
@@ -208,7 +195,11 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
 
             mTextPaint = new Paint();
             mTextPaint = createTextPaint(resources.getColor(R.color.digital_text));
+
             mCalendar = Calendar.getInstance();
+            mDate = mCalendar.getTime();
+            mSimpleDateFormat = new SimpleDateFormat("EEEE MMMM dd", Locale.getDefault());
+            mFormatedDateString = mSimpleDateFormat.format(mDate);
         }
 
         @Override
@@ -338,16 +329,12 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             if (isInAmbientMode()) {
                 canvas.drawColor(Color.BLACK);
                 mDateTextView.setVisibility(View.INVISIBLE);
-                mMonthTextView.setVisibility(View.INVISIBLE);
-                mDayTextView.setVisibility(View.INVISIBLE);
                 mIconImageView.setVisibility(View.INVISIBLE);
             } else {
                 canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
                 mWearLayout.measure(mSpecW, mSpecH);
                 mWearLayout.layout(0, 0, mWearLayout.getMeasuredWidth(), mWearLayout.getMeasuredHeight());
                 mDateTextView.setVisibility(View.VISIBLE);
-                mMonthTextView.setVisibility(View.VISIBLE);
-                mDayTextView.setVisibility(View.VISIBLE);
                 mIconImageView.setVisibility(View.VISIBLE);
                 canvas.drawColor(mBackgroundPaint.getColor());
 
