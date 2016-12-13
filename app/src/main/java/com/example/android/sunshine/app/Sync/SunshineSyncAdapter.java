@@ -459,7 +459,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter implements 
             String wearableHigh = Utility.formatTemperature(getContext(), high, false);
             String wearableLow = Utility.formatTemperature(getContext(), low, false);
 
-            PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/weather-data");
+            PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/weather-data").setUrgent();
             putDataMapRequest.getDataMap().putString("high-temp", wearableHigh);
             putDataMapRequest.getDataMap().putString("low-temp", wearableLow);
             putDataMapRequest.getDataMap().putString("sunshine_weather_id", iconId);
