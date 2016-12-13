@@ -24,10 +24,9 @@ public class WeatherFromMobileListenerService extends WearableListenerService im
     public static final String WEATHER_DATA = "/weather-data";
     public static final String HIGH_TEMP = "high-temp";
     public static final String LOW_TEMP = "low-temp";
-    public static final String  WEATHER_ID = "sunshine_weather_id";
+    public static final String WEATHER_ID = "sunshine_weather_id";
 
     GoogleApiClient mGoogleApiClient;
-
 
     @Override
     public void onCreate() {
@@ -55,7 +54,6 @@ public class WeatherFromMobileListenerService extends WearableListenerService im
                             .putExtra("low-temp", mMinTemp)
                             .putExtra("sunshine_weather_id", mWeatherId);
                     sendBroadcast(sendWeatherInent);
-                    Log.i(LOG_TAG, "Nice here's the weatherId" + mWeatherId);
                 }
             } else if (dataEvent.getType() == DataEvent.TYPE_DELETED) {
             }
@@ -72,8 +70,6 @@ public class WeatherFromMobileListenerService extends WearableListenerService im
     @Override
     public void onConnectionSuspended(int i) {
         Log.d(LOG_TAG, "Google API Client was suspended");
-
-
     }
 
     @Override
@@ -81,9 +77,5 @@ public class WeatherFromMobileListenerService extends WearableListenerService im
         Wearable.DataApi.removeListener(mGoogleApiClient, this);
         mGoogleApiClient.connect();
         Log.d(LOG_TAG, "Google API Client failed");
-
-
     }
-
-
 }

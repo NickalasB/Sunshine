@@ -58,10 +58,8 @@ import java.util.concurrent.TimeUnit;
 public class SunshineWatchFace extends CanvasWatchFaceService {
     public final String LOG_TAG = SunshineWatchFace.class.getSimpleName();
 
-
     private static final Typeface NORMAL_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
-
 
     /**
      * Update rate in milliseconds for interactive mode. We update once a second since seconds are
@@ -104,7 +102,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         final Handler mUpdateTimeHandler = new EngineHandler(this);
         boolean mRegisteredTimeZoneReceiver = false;
         boolean mRegisterdWeatherReceiver = false;
-
 
         private int mSpecW;
         private int mSpecH;
