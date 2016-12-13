@@ -24,6 +24,7 @@ public class WeatherFromMobileListenerService extends WearableListenerService im
     public static final String WEATHER_DATA = "/weather-data";
     public static final String HIGH_TEMP = "high-temp";
     public static final String LOW_TEMP = "low-temp";
+    public static final String  WEATHER_ID = "sunshine_weather_id";
 
     GoogleApiClient mGoogleApiClient;
 
@@ -48,13 +49,16 @@ public class WeatherFromMobileListenerService extends WearableListenerService im
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
                     String mMaxTemp = dataMap.getString(HIGH_TEMP);
                     String mMinTemp = dataMap.getString(LOW_TEMP);
+                    String mWeatherId = dataMap.getString(WEATHER_ID);
                     Intent sendWeatherInent = new Intent("ACTION_WEATHER_CHANGED");
                     sendWeatherInent.putExtra("high-temp", mMaxTemp)
-                            .putExtra("low-temp", mMinTemp);
+                            .putExtra("low-temp", mMinTemp)
+                            .putExtra("sunshine_weather_id", mWeatherId);
                     sendBroadcast(sendWeatherInent);
-                    Log.i(LOG_TAG, "Nice here's the high temp" + mMaxTemp);
+                    Log.i(LOG_TAG, "Nice here's the weatherId" + mWeatherId);
                 }
-            } else if (dataEvent.getType() == DataEvent.TYPE_DELETED) {}
+            } else if (dataEvent.getType() == DataEvent.TYPE_DELETED) {
+            }
         }
     }
 

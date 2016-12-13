@@ -122,6 +122,8 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private String mMaxTempString;
         private String mMinTempString;
 
+        private String mWeatherIdString;
+
         private final Point displaySize = new Point();
 
         private Paint mBackgroundPaint;
@@ -141,7 +143,8 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private final BroadcastReceiver mWeatherReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                getTemperatures(intent);
+                getWeatherData(intent);
+                setWeatherIcon(intent);
                 mDateTextView.setText(mFormatedDateString);
                 invalidate();
             }
@@ -152,7 +155,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         boolean mLowBitAmbient;
 
 
-        private void getTemperatures(Intent intent) {
+        private void getWeatherData(Intent intent) {
             mMaxTempString = intent.getStringExtra("high-temp");
             mHighTempTextView = (TextView) mWearLayout.findViewById(R.id.wear_hi_textview);
             mHighTempTextView.setText(mMaxTempString);
@@ -160,6 +163,13 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mMinTempString = intent.getStringExtra("low-temp");
             mLowTempTextView = (TextView) mWearLayout.findViewById(R.id.wear_low_textview);
             mLowTempTextView.setText(mMinTempString);
+
+        }
+
+        private void setWeatherIcon(Intent intent) {
+            mWeatherIdString = intent.getStringExtra("sunshine_weather_id");
+            mIconImageView = (ImageView) mWearLayout.findViewById(R.id.wear_icon_imageview);
+            mIconImageView.setImageResource(Utility.getIconResourceForWeatherCondition(Integer.parseInt(mWeatherIdString)));
         }
 
         @Override
